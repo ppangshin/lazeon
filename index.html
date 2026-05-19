@@ -2,13 +2,13 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>LAZEON — Orange</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --bg: #050a12; --accent: #e8541a; --accent2: #ff8c42;
+  --bg: #000000; --accent: #e8541a; --accent2: #ff8c42;
   --accent-rgb: 232,84,26; --text: #e8f0ff; --muted: #9aaece; --nav-h: 56px;
 }
 html, body { height: 100%; overflow: hidden; }
@@ -24,7 +24,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', s
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-h);
   display: flex; align-items: center; justify-content: space-between; padding: 0 48px;
-  background: rgba(5,10,18,0.95); backdrop-filter: blur(12px);
+  background: rgba(0,0,0,0.95); backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(var(--accent-rgb),0.08);
 }
 .logo-img { height: 22px; width: auto; }
@@ -40,7 +40,7 @@ nav {
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 .mobile-menu {
   display: none; position: fixed; top: var(--nav-h); left: 0; right: 0;
-  background: rgba(5,10,18,0.98); backdrop-filter: blur(16px);
+  background: rgba(0,0,0,0.98); backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(var(--accent-rgb),0.1);
   padding: 24px 24px 32px; z-index: 99;
   flex-direction: column; gap: 20px;
@@ -137,39 +137,82 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events
 @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (max-width: 768px) {
-  nav { padding: 0 20px; }
+  :root { --nav-h: 52px; }
+  nav { padding: 0 18px; padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+  .logo-img { height: 20px; }
   .nav-links { display: none; }
   .hamburger { display: flex; }
   .dot-nav { display: none; }
-  .snap-section { height: 100dvh; }
-  #scroll-container { height: 100dvh; }
+
+  /* 모바일에서는 스크롤 스냅 해제하여 콘텐츠 잘림 방지 */
+  #scroll-container { scroll-snap-type: none; height: 100dvh; -webkit-overflow-scrolling: touch; }
+  .snap-section { scroll-snap-align: none; height: auto; min-height: 100dvh; padding-bottom: env(safe-area-inset-bottom); }
+  #hero { min-height: 100dvh; }
+
+  /* 화살표는 hero에서만 표시 (스냅 해제로 불필요) */
+  #about .scroll-hint, #products .scroll-hint, #technology .scroll-hint { display: none; }
+
   .hero-content { padding: 0 20px; }
   .hero-label { font-size: 9px; letter-spacing: 3px; margin-bottom: 16px; }
-  .hero-title { font-size: clamp(30px, 8vw, 48px); margin-bottom: 14px; }
-  .hero-sub { font-size: 14px; margin-bottom: 28px; }
+  .hero-title { font-size: clamp(28px, 7.5vw, 40px); margin-bottom: 14px; line-height: 1.2; }
+  .hero-sub { font-size: 14px; margin-bottom: 28px; line-height: 1.7; }
   .hero-buttons { flex-direction: column; width: 100%; max-width: 260px; gap: 10px; }
-  .btn-primary, .btn-secondary { width: 100%; text-align: center; padding: 13px; }
-  .section-inner { padding: 72px 20px 32px; }
-  .section-title { font-size: clamp(20px, 5.5vw, 28px); margin-bottom: 24px; }
+  .btn-primary, .btn-secondary { width: 100%; text-align: center; padding: 13px; font-size: 14px; }
+
+  .section-inner { padding: calc(var(--nav-h) + 32px) 20px 40px; max-width: 100%; }
+  .section-label { font-size: 10px; letter-spacing: 3px; margin-bottom: 10px; }
+  .section-title { font-size: clamp(20px, 5.5vw, 28px); margin-bottom: 24px; line-height: 1.3; }
+
   .about-grid { grid-template-columns: 1fr; gap: 24px; }
-  .about-text p { font-size: 14px; margin-bottom: 10px; }
+  .about-text p { font-size: 14px; margin-bottom: 10px; line-height: 1.8; }
   .stats { grid-template-columns: 1fr 1fr; gap: 10px; }
   .stat-card { padding: 14px 12px; }
   .stat-num { font-size: 20px; }
   .stat-label { font-size: 11px; }
+
   .products-grid { grid-template-columns: 1fr; gap: 12px; }
   .product-card { padding: 20px 18px; gap: 14px; }
   .product-icon-wrap { width: 44px; height: 44px; }
+  .product-icon-wrap svg { width: 32px; height: 32px; }
   .product-name { font-size: 16px; }
-  .product-desc { font-size: 13px; }
+  .product-desc { font-size: 13px; line-height: 1.7; }
+
   .tech-item { flex-direction: column; gap: 4px; padding: 14px 0; }
+  .tech-num { padding-top: 0; }
   .tech-name { font-size: 14px; min-width: unset; font-weight: 600; }
-  .tech-desc { font-size: 13px; }
+  .tech-desc { font-size: 13px; line-height: 1.7; }
+
   .contact-box { grid-template-columns: 1fr; gap: 24px; padding: 24px 18px; border-radius: 8px; }
   .contact-text h3 { font-size: 18px; margin-bottom: 10px; }
   .contact-text p { font-size: 14px; }
   .contact-info { gap: 14px; }
-  .contact-row a, .contact-row span { font-size: 14px; }
+  .contact-row a, .contact-row span { font-size: 14px; word-break: break-all; }
+
+  /* 터치 타겟 최소 크기 확보 */
+  .hamburger { min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
+  .mobile-menu a { padding: 12px 0; font-size: 15px; }
+}
+
+/* 아이폰 SE 등 좁은 화면 */
+@media (max-width: 380px) {
+  nav { padding: 0 14px; }
+  .hero-content { padding: 0 16px; }
+  .hero-title { font-size: 26px; }
+  .hero-sub { font-size: 13px; }
+  .section-inner { padding: calc(var(--nav-h) + 24px) 16px 32px; }
+  .section-title { font-size: 20px; margin-bottom: 20px; }
+  .stats { gap: 8px; }
+  .stat-card { padding: 12px 10px; }
+  .product-card { padding: 18px 14px; }
+  .product-header { gap: 12px; }
+}
+
+/* 가로 모드 (낮은 높이) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-label { margin-bottom: 10px; }
+  .hero-title { font-size: 24px; margin-bottom: 10px; }
+  .hero-sub { font-size: 12px; margin-bottom: 16px; line-height: 1.5; }
+  .scroll-hint { bottom: 12px; }
 }
 </style>
 </head>
@@ -355,6 +398,7 @@ const sectionEls=Array.from(document.querySelectorAll('.snap-section'));
 const dots=document.querySelectorAll('.dot');
 let current=0, isScrolling=false;
 const DURATION=700;
+const isMobileView=()=>window.innerWidth<=768;
 
 function goTo(idx){
   if(idx<0||idx>=sectionEls.length)return;
@@ -364,6 +408,7 @@ function goTo(idx){
 }
 
 container.addEventListener('wheel',e=>{
+  if(isMobileView())return; // 모바일: 기본 스크롤 허용
   e.preventDefault();
   if(isScrolling)return;
   isScrolling=true;
@@ -375,6 +420,7 @@ container.addEventListener('wheel',e=>{
 let touchStartY=0;
 container.addEventListener('touchstart',e=>{touchStartY=e.touches[0].clientY;},{passive:true});
 container.addEventListener('touchend',e=>{
+  if(isMobileView())return; // 모바일: 기본 스크롤 허용
   if(isScrolling)return;
   const diff=touchStartY-e.changedTouches[0].clientY;
   if(Math.abs(diff)<40)return;
@@ -382,6 +428,18 @@ container.addEventListener('touchend',e=>{
   if(diff>0)goTo(Math.min(current+1,sectionEls.length-1));
   else goTo(Math.max(current-1,0));
   setTimeout(()=>{isScrolling=false;},DURATION);
+},{passive:true});
+
+// 모바일에서 스크롤 위치에 따라 active dot 갱신 (dot은 숨겨져 있지만 일관성 유지)
+container.addEventListener('scroll',()=>{
+  if(!isMobileView())return;
+  const scrollTop=container.scrollTop;
+  const vh=window.innerHeight;
+  const idx=Math.round(scrollTop/vh);
+  if(idx!==current&&idx>=0&&idx<sectionEls.length){
+    current=idx;
+    dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+  }
 },{passive:true});
 
 document.addEventListener('keydown',e=>{
@@ -398,15 +456,15 @@ function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeigh
 resize();window.addEventListener('resize',resize);
 const isMobile=()=>window.innerWidth<=768;
 const particles=[];
-function initP(){particles.length=0;const n=isMobile()?60:120;for(let i=0;i<n;i++)particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*0.4,vy:(Math.random()-.5)*0.4,size:Math.random()*1.5+0.3,alpha:Math.random()*0.5+0.1});}
+function initP(){particles.length=0;const n=isMobile()?40:120;for(let i=0;i<n;i++)particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*0.4,vy:(Math.random()-.5)*0.4,size:Math.random()*1.5+0.3,alpha:Math.random()*0.5+0.1});}
 initP();window.addEventListener('resize',initP);
 const beams=[];
-function spawnBeam(){if(isMobile()&&beams.length>=5)return;const e=Math.floor(Math.random()*4);let x,y,vx,vy;const s=1.5+Math.random()*2;if(e===0){x=Math.random()*canvas.width;y=0;vx=(Math.random()-.5)*s;vy=s;}else if(e===1){x=canvas.width;y=Math.random()*canvas.height;vx=-s;vy=(Math.random()-.5)*s;}else if(e===2){x=Math.random()*canvas.width;y=canvas.height;vx=(Math.random()-.5)*s;vy=-s;}else{x=0;y=Math.random()*canvas.height;vx=s;vy=(Math.random()-.5)*s;}beams.push({x,y,vx,vy,length:60+Math.random()*100,alpha:0.35+Math.random()*0.35,width:0.5+Math.random(),color:ACCENT,trail:[],life:0,maxLife:200+Math.random()*200});}
+function spawnBeam(){if(isMobile()&&beams.length>=4)return;const e=Math.floor(Math.random()*4);let x,y,vx,vy;const s=1.5+Math.random()*2;if(e===0){x=Math.random()*canvas.width;y=0;vx=(Math.random()-.5)*s;vy=s;}else if(e===1){x=canvas.width;y=Math.random()*canvas.height;vx=-s;vy=(Math.random()-.5)*s;}else if(e===2){x=Math.random()*canvas.width;y=canvas.height;vx=(Math.random()-.5)*s;vy=-s;}else{x=0;y=Math.random()*canvas.height;vx=s;vy=(Math.random()-.5)*s;}beams.push({x,y,vx,vy,length:60+Math.random()*100,alpha:0.35+Math.random()*0.35,width:0.5+Math.random(),color:ACCENT,trail:[],life:0,maxLife:200+Math.random()*200});}
 for(let i=0;i<6;i++)spawnBeam();
-setInterval(()=>{if(beams.length<(isMobile()?5:12))spawnBeam();},800);
+setInterval(()=>{if(beams.length<(isMobile()?4:12))spawnBeam();},isMobile()?1200:800);
 let mouse={x:-999,y:-999};document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
 function draw(){
-  ctx.fillStyle='rgba(5,10,18,0.15)';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='rgba(0,0,0,0.15)';ctx.fillRect(0,0,canvas.width,canvas.height);
   if(!isMobile())for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.strokeStyle=`rgba(${ACCENT_RGB},${0.04*(1-d/100)})`;ctx.lineWidth=0.5;ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}}
   particles.forEach(p=>{const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy);if(d<80){p.vx+=dx/d*0.05;p.vy+=dy/d*0.05;}p.vx*=0.995;p.vy*=0.995;p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=`rgba(${ACCENT_RGB},${p.alpha})`;ctx.fill();});
   for(let i=beams.length-1;i>=0;i--){const b=beams[i];b.trail.push({x:b.x,y:b.y});if(b.trail.length>b.length)b.trail.shift();b.x+=b.vx;b.y+=b.vy;b.life++;if(b.life>b.maxLife||b.x<-200||b.x>canvas.width+200||b.y<-200||b.y>canvas.height+200){beams.splice(i,1);continue;}if(b.trail.length>1){ctx.beginPath();ctx.moveTo(b.trail[0].x,b.trail[0].y);for(let t=1;t<b.trail.length;t++)ctx.lineTo(b.trail[t].x,b.trail[t].y);ctx.strokeStyle=b.color;ctx.globalAlpha=b.alpha*(1-b.life/b.maxLife);ctx.lineWidth=b.width;ctx.stroke();const prev=b.trail[b.trail.length-2];if(prev){ctx.beginPath();ctx.moveTo(prev.x,prev.y);ctx.lineTo(b.x,b.y);ctx.lineWidth=b.width*3;ctx.globalAlpha=0.12*b.alpha;ctx.stroke();}ctx.globalAlpha=1;}}
